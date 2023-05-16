@@ -18,16 +18,20 @@ namespace Giant_Robot_Killer
         public int MaxHealthPoints { get; private set; }
         public int HealthPoints { get; set; }
         public Point Position { get; set; }
+        public bool Alive { get; set; }
         public Entity(int maxHealthPoints, FactionType faction) 
         {
             this.MaxHealthPoints = maxHealthPoints;
             this.HealthPoints = maxHealthPoints;
             this.Faction = faction;
+            Alive = true;
         }
         public void SetOnMap(Point position)
         {
             Position = position;
         }
         public abstract void Draw(Graphics handler);
+        public 
+ 
     }
 }

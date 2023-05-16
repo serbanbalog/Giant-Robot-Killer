@@ -24,5 +24,10 @@ namespace Giant_Robot_Killer
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

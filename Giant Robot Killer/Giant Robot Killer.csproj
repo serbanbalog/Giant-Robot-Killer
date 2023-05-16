@@ -59,7 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Defenders.cs" />
+    <Compile Include="Defender.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Robot.cs" />
     <Page Include="MainWindow.xaml">
