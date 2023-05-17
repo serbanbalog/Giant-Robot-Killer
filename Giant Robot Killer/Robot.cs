@@ -10,30 +10,18 @@ namespace Giant_Robot_Killer
 {
     public abstract class Robot : Entity
     {
-        public enum RobotType
+        private int Power { get; set; }
+        private int MaxMagazineCapacity { get; set; }
+        private int CurrentMagazineCapacity { get; set; }
+        private Defender CurrentTarget { get; set; }
+        private int Range { get; set; }
+        public Robot(int maxHealthPoints, int power, int maxMagazineCapacity, int currentMagazineCapacity, Defender currentTarget, int range, FactionType faction) : base(maxHealthPoints, faction)
         {
-            Healer,
-            Executioner,
-            Marksman
-        }
-        public RobotType Type { get; private set; }
-        public int Power { get; private set; }
-        public int MaxMagazineCapacity { get; private set; }
-        public int CurrentMagazineCapacity { get; set; }
-        public Defender CurrentTarget { get; set; }
-        public int Range { get; private set; }
-        public Robot(int maxHealthPoints, RobotType type, int power, int maxMagazineCapacity, int currentMagazineCapacity, Defender currentTarget, int range, FactionType faction) : base(maxHealthPoints, faction)
-        {
-            Type = type;
             Power = power;
             MaxMagazineCapacity = maxMagazineCapacity;
             CurrentMagazineCapacity = currentMagazineCapacity;
             CurrentTarget = currentTarget;
             Range = range;
-        }
-        public override void Draw(Graphics handler)
-        {
-            throw new NotImplementedException();
         }
         public void InteractWithTarget(Defender target, Robot robot)
         {
@@ -55,19 +43,19 @@ namespace Giant_Robot_Killer
                     else
                         target.HealthPoints -= robot.Power;
                 }
+                robot.CurrentMagazineCapacity--;
             }
             else if (robot.CurrentMagazineCapacity == 0)
                 robot.CurrentMagazineCapacity = MaxMagazineCapacity;
         }
-        public int CalculateHealing(Entity entity, int healingValue)
+        private int CalculateHealing(Entity entity, int healingValue)
         {
             if (CheckHealingOverflow(entity, healingValue))
                 return entity.MaxHealthPoints;
             else
                 return entity.HealthPoints + healingValue;
-
         }
-        public bool CheckHealingOverflow(Entity entity, int healingValue)
+        private bool CheckHealingOverflow(Entity entity, int healingValue)
         {
             if ((entity.HealthPoints + healingValue) > entity.MaxHealthPoints)
                 return true;
