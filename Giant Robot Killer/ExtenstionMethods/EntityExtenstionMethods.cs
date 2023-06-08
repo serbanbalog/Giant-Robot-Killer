@@ -33,11 +33,12 @@ namespace Giant_Robot_Killer.ExtenstionMethods
             };
             return img;
         }
-        public static void Move(this Entity entity, ref Planet planet)
+        public static void Move(this Entity entity, Planet planet)
         {
             if(entity.Directions.Count > 0)
             {
                 PointF temp = new PointF();
+                planet.Tiles[(int)entity.Position.X, (int)entity.Position.Y].Entity = null;
                 temp.X = entity.Position.X + entity.Directions.First().x;
                 temp.Y = entity.Position.Y + entity.Directions.First().y;
                 entity.Position = temp;

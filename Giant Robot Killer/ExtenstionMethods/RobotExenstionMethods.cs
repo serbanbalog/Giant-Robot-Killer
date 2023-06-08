@@ -17,7 +17,7 @@ namespace Giant_Robot_Killer.ExtenstionMethods
             return false;
         }
         public static bool CheckIfTargetInRange(this Robot robot)
-        {
+        {   
             if (robot.CurrentTarget.Alive == true)
             {
                 float distX = Math.Abs(robot.CurrentTarget.Position.X - robot.Position.X);

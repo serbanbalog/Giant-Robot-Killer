@@ -35,7 +35,7 @@ namespace Giant_Robot_Killer
             float Y = this.absLocation.Y + dY / 2;
             this.Entity.AbsPosition = new PointF(X, Y);
         }
-        public static void DrawLines(ref Canvas canvas, int i, int j, int n, int m)
+        public static void DrawLines(Canvas canvas, int i, int j, int n, int m)
         {
             Line line1 = new Line();
 
@@ -57,10 +57,10 @@ namespace Giant_Robot_Killer
             line2.X2 = line2.X1;
             canvas.Children.Add(line2);
         }
-        public void Draw(ref Canvas canvas, int i, int j, int n, int m, ref ListBox listBox,ref Planet planet)
+        public void Draw(Canvas canvas, int i, int j, int n, int m, ListBox listBox, Planet planet)
         {
             Engine eng = new Engine();
-
+            this.Entity = planet.Tiles[i, j].Entity;
             if (this.Entity != null && this.Entity.Alive == true)
             {
                 Image tempImg = this.Entity.Draw(canvas.ActualWidth / m, canvas.ActualHeight / n);
@@ -70,29 +70,29 @@ namespace Giant_Robot_Killer
                 if (this.Entity.GetType().Name == "Gunslinger")
                 {
                     Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(ref tempRobot, planet);
+                    eng.SetPathToClosestEntity(tempRobot, planet);
                     string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
                     listBox.Items.Add(temp);
                     Entity = tempRobot;
-                    Entity.Move(ref planet);
+                    this.Entity.Move(planet);
                 }
                 else if (this.Entity.GetType().Name == "Executioner")
                 {
                     Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(ref tempRobot, planet);
+                    eng.SetPathToClosestEntity(tempRobot, planet);
                     string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
                     listBox.Items.Add(temp);
                     Entity = tempRobot;
-                    Entity.Move(ref planet);
+                    Entity.Move(planet);
                 }
                 else if (this.Entity.GetType().Name == "Healer")
                 {
                     Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(ref tempRobot, planet);
+                    eng.SetPathToClosestEntity(tempRobot, planet);
                     string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
                     listBox.Items.Add(temp);
                     Entity = tempRobot;
-                    Entity.Move(ref planet);
+                    Entity.Move(planet);
                 }
             }
         }

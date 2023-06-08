@@ -145,17 +145,23 @@ namespace Giant_Robot_Killer
             g.ChangeMap(mainImage, Planet.GoToPlanet(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1]));
             int planetNr = (int)(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1] - '0');
             currentPlanet = planets[planetNr];
-            planets[planetNr].Draw(ref mainCanvas, ref currentPlanet, ref ListBox1);
+            planets[planetNr].Draw( mainCanvas, currentPlanet,  ListBox1);
 
             mainCanvas.Children.RemoveRange(0, 8);
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if(currentPlanet != null)
             {
+                for(int i = 0; i < 8; i++)
+                {
+                    if (currentPlanet.Name == (Planet.PlanetName)i)
+                        planets[i] = currentPlanet;
+                }
+                mainCanvas.Children.Clear();
                 Engine eng = new Engine();
-                eng.Tick(ref mainCanvas,ref currentPlanet, ref ListBox1);
+                eng.Tick(mainCanvas, currentPlanet, ListBox1);
+
             }
         }
     }

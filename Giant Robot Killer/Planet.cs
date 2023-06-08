@@ -145,15 +145,15 @@ namespace Giant_Robot_Killer
             }
             return planet;
         }
-        public void Draw(ref Canvas canvas,ref Planet planet, ref ListBox listBox)
+        public void Draw(Canvas canvas, Planet planet, ListBox listBox)
         {
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < m; j++)
                 {
-                    planet.Tiles[i, j].Draw(ref canvas, i, j, n , m, ref listBox,ref planet);
+                    planet.Tiles[i, j].Draw( canvas, i, j, n , m,  listBox, planet);
                     if (!MainWindow.areLinesDrawn)
-                        Tile.DrawLines(ref canvas, i, j, n, m);
+                        Tile.DrawLines( canvas, i, j, n, m);
                 }
             }
         }

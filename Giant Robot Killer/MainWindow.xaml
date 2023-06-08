@@ -22,7 +22,7 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
-        <Button Content="Tick" Margin="1126,715,74,50" RenderTransformOrigin="0.5,0.5" Height="25" Width="100" Click="Button_Click">
+        <Button Content="Tick" Margin="1075,703,125,40" RenderTransformOrigin="0.5,0.5" Width="100" Click="Button_Click">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -32,8 +32,8 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
-        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="51" Margin="54,715,0,0" VerticalAlignment="Top" Width="418"/>
-        
+        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="91" Margin="15,685,0,0" VerticalAlignment="Top" Width="537"/>
+
 
     </Grid>
 </Window>
