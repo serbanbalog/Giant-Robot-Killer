@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Giant_Robot_Killer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Image HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="701"/>
-        <Button Content="Button" Margin="718,402,11,12" RenderTransformOrigin="0.5,0.5" Click="Button_Click">
+        Title="MainWindow" Height="800" Width="1300">
+    <Grid Margin="0,0,0,-6">
+        <Canvas Name="mainCanvas" ClipToBounds="True" Margin="15,15,15,110" SizeChanged="mainCanvas_SizeChanged">
+            <Canvas.Background>
+                <ImageBrush x:Name="mainImage" Stretch="Uniform"  RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Canvas.Background>
+        </Canvas>
+        <Button Content="Button" Margin="807,675,117,10" RenderTransformOrigin="0.5,0.5" Height="25" Width="100" Click="ReturnToMainMenu">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -18,6 +22,18 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
+        <Button Content="Tick" Margin="1126,715,74,50" RenderTransformOrigin="0.5,0.5" Height="25" Width="100" Click="Button_Click">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-0.009"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="51" Margin="54,715,0,0" VerticalAlignment="Top" Width="418"/>
+        
 
     </Grid>
 </Window>
