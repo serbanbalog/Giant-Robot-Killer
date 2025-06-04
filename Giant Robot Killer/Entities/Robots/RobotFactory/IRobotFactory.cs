@@ -1,11 +1,7 @@
-﻿using Giant_Robot_Killer.Robots;
-
-namespace Giant_Robot_Killer
+﻿namespace Giant_Robot_Killer.Entities.Robots.RobotFactory
 {
     public interface IRobotFactory
     {
-        Executioner CreateExecutionerRobot();
-        Healer CreateHealerRobot();
-        Gunslinger CreateGunslingerRobot();
+        Robot GenerateRandomRobot();
     }
 }

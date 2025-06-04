@@ -1,62 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using Giant_Robot_Killer.Entities;
+using Giant_Robot_Killer.Entities.OrganicBeings.OrganicBeingCreator;
+using Giant_Robot_Killer.Entities.Robots.RobotFactory;
+using Giant_Robot_Killer.Enums;
 
 namespace Giant_Robot_Killer
 {
     public class Planet
     {
-        Random rnd = new Random();
-
-        public enum PlanetName
-        {
-            Mercury,
-            Venus,
-            Earth,
-            Mars,
-            Jupiter,
-            Saturn,
-            Uranus,
-            Neptune
-        }
+        private Random _rnd = new Random();
+        private readonly int _robotCapacity, _organicBeingCapacity;
         public PlanetName Name { get; private set; }
-        public int Capacity { get; private set; }
         public Tile[,] Tiles { get; set; }
-        public int n
-        {
-            get
-            {
-                return Tiles.GetLength(0);
-            }
-        }
-        public int m
-        {
-            get
-            {
-                return this.Tiles.GetLength(1);
-            }
-        }
+        public int N => Tiles.GetLength(0);
+        public int M => Tiles.GetLength(1);
+        public int Turn { get; set; }
+
         public Planet(PlanetName name)
         {
-            this.Name = name;
-            this.Capacity = rnd.Next(25,40);
+            Name = name;
+            var capacity = _rnd.Next(25,40);
+            _robotCapacity = capacity / 3;
+            _organicBeingCapacity = capacity - _robotCapacity;
+            Turn = 0;
+            
             Tiles = new Tile[30, 30];
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < N; i++)
             {
-                for (int j = 0; j < m; j++)
+                for (int j = 0; j < M; j++)
                 {
                     Tiles[i, j] = new Tile(new PointF(i, j));
                 }
             }
-            PopulatePlanet(this);
+            PopulatePlanet();
         }
         public static BitmapImage GoToPlanet(char buttonNo)
         {
@@ -97,65 +77,40 @@ namespace Giant_Robot_Killer
             BitmapImage bmp = new BitmapImage(new Uri(sFilePath));
             return bmp;
         }
-        private Planet PopulatePlanet(Planet planet)
-        {
-            Random rnd = new Random();
-
-            OrganicBeingCreator organicCreator = new OrganicBeingCreator();
-            int robotCapacity = planet.Capacity / 3;
-            int i = 0;
-            while (i < robotCapacity)
-            {
-                RobotFactory robotFactory = new RobotFactory();
-                int tempN = rnd.Next(n);
-                int tempM = rnd.Next(m);
-                if (Tiles[tempN, tempM].Entity == null)
-                    switch (rnd.Next(3))
-                    {
-                        case 0:
-                            Tiles[tempN, tempM].SetEntity(robotFactory.CreateHealerRobot());
-                            break;
-                        case 1:
-                            Tiles[tempN, tempM].SetEntity(robotFactory.CreateGunslingerRobot());
-                            break;
-                        case 2:
-                            Tiles[tempN, tempM].SetEntity(robotFactory.CreateExecutionerRobot());
-                            break;
-                    }
-                i++;
-            }
-
-            int currentCapacity = planet.Capacity - robotCapacity;
-
-            while (i < currentCapacity)
-            {
-                int tempN = rnd.Next(n);
-                int tempM = rnd.Next(m);
-                if (Tiles[tempN, tempM].Entity == null)
-                    switch (rnd.Next(2))
-                    {
-                        case 0:
-                            Tiles[tempN, tempM].SetEntity(organicCreator.CreateHuman());
-                            break;
-                        case 1:
-                            Tiles[tempN, tempM].SetEntity(organicCreator.CreateAnimal());
-                            break;
-                    }
-                i++;
-            }
-            return planet;
+        
+        private void PopulatePlanet()
+        {            
+            RobotFactory robotFactory = new RobotFactory();
+            GenerateEntities(_robotCapacity,() => robotFactory.GenerateRandomRobot());
+            
+            OrganicBeingCreator organicBeingCreator = new OrganicBeingCreator();
+            GenerateEntities(_organicBeingCapacity,() => organicBeingCreator.CreateOrganicBeing());
         }
+
+        private void GenerateEntities(int capacity, Func<Entity> generator)
+        {
+            for (int i=0; i < capacity; i++)
+            {
+                int tempN = _rnd.Next(N);
+                int tempM = _rnd.Next(M);
+                if (Tiles[tempN, tempM].Entity == null)
+                    Tiles[tempN, tempM].SetEntity(generator());
+            }
+        }
+        
         public void Draw(Canvas canvas, Planet planet, ListBox listBox)
         {
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < N; i++)
             {
-                for (int j = 0; j < m; j++)
+                for (int j = 0; j < M; j++)
                 {
-                    planet.Tiles[i, j].Draw( canvas, i, j, n , m,  listBox, planet);
+                    planet.Tiles[i, j].Draw( canvas, i, j, N , M,  listBox, planet);
                     if (!MainWindow.areLinesDrawn)
-                        Tile.DrawLines( canvas, i, j, n, m);
+                        Tile.DrawLines( canvas, i, j, N, M);
                 }
             }
+
+            Turn++;
         }
     }
 }

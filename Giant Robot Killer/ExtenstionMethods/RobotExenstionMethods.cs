@@ -1,4 +1,5 @@
 ﻿using System;
+using Giant_Robot_Killer.Entities.Robots;
 
 namespace Giant_Robot_Killer.ExtenstionMethods
 {

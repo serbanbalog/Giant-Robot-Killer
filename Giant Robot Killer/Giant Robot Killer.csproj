@@ -62,11 +62,12 @@
     </ApplicationDefinition>
     <Compile Include="Engine.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\OrganicBeings\Animal\Animal.cs" />
-    <Compile Include="Entities\OrganicBeings\Human\Human.cs" />
+    <Compile Include="Entities\OrganicBeings\Animal.cs" />
+    <Compile Include="Entities\OrganicBeings\Human.cs" />
     <Compile Include="Entities\OrganicBeings\OrganicBeingCreator\IOrganicBeingCreator.cs" />
     <Compile Include="Entities\OrganicBeings\OrganicBeingCreator\OrganicBeingCreator.cs" />
     <Compile Include="Entities\Robots\RobotFactory\IRobotFactory.cs" />
+    <Compile Include="Enums\PlanetName.cs" />
     <Compile Include="ExtenstionMethods\EntityExtenstionMethods.cs" />
     <Compile Include="ExtenstionMethods\RobotExenstionMethods.cs" />
     <Compile Include="Entities\Robots\ExecutionerRobot\Executioner.cs" />

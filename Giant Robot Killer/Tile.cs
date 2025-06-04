@@ -1,97 +1,101 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
+﻿using System.Windows.Controls;
 using System.Drawing;
 using Image = System.Windows.Controls.Image;
 using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Diagnostics.Contracts;
+using Giant_Robot_Killer.Entities;
+using Giant_Robot_Killer.Entities.Robots;
+using Giant_Robot_Killer.Entities.Robots.ExecutionerRobot;
+using Giant_Robot_Killer.Entities.Robots.GunslingRobot;
+using Giant_Robot_Killer.Entities.Robots.HealerRobot;
 using Giant_Robot_Killer.ExtenstionMethods;
 
 namespace Giant_Robot_Killer
 {
     public class Tile
     {
-        public PointF mapLocation;
-        public PointF absLocation;
+        private readonly PointF _mapLocation;
+        private PointF _absLocation;
         public static int dX = 20, dY = 20;
         public Entity Entity;
         public Tile(PointF mapLocation)
         {
-            this.mapLocation = mapLocation;
-            this.absLocation = new PointF(mapLocation.X * dX, mapLocation.Y * dY);
+            _mapLocation = mapLocation;
+            _absLocation = new PointF(mapLocation.X * dX, mapLocation.Y * dY);
         }
         public void SetEntity(Entity toSet)
         {
-            this.Entity = toSet;
-            this.Entity.Position = this.mapLocation;
-            float X = this.absLocation.X + dX / 2;
-            float Y = this.absLocation.Y + dY / 2;
-            this.Entity.AbsPosition = new PointF(X, Y);
+            Entity = toSet;
+            Entity.Position = _mapLocation;
+            float x = _absLocation.X + dX / 2;
+            float y = _absLocation.Y + dY / 2;
+            Entity.AbsPosition = new PointF(x, y);
         }
         public static void DrawLines(Canvas canvas, int i, int j, int n, int m)
         {
-            Line line1 = new Line();
+            double cellHeight = canvas.ActualHeight / n;
+            double cellWidth = canvas.ActualWidth / m;
 
-            line1.Stroke = System.Windows.Media.Brushes.Black;
-            line1.Fill = System.Windows.Media.Brushes.Black;
-            line1.X1 = 0;
-            line1.Y1 = (i + 1) * (canvas.ActualHeight / n);
-            line1.Y2 = line1.Y1;
-            line1.X2 = canvas.ActualWidth;
+            Line line1 = new Line
+            {
+                Stroke = System.Windows.Media.Brushes.Black,
+                X1 = 0,
+                Y1 = (i + 1) * cellHeight,
+                X2 = canvas.ActualWidth,
+                Y2 = (i + 1) * cellHeight
+            };
             canvas.Children.Add(line1);
 
-            Line line2 = new Line();
-
-            line2.Stroke = System.Windows.Media.Brushes.Black;
-            line2.Fill = System.Windows.Media.Brushes.Black;
-            line2.X1 = (j + 1) * (canvas.ActualWidth / m);
-            line2.Y1 = 0;
-            line2.Y2 = canvas.ActualHeight;
-            line2.X2 = line2.X1;
+            Line line2 = new Line
+            {
+                Stroke = System.Windows.Media.Brushes.Black,
+                X1 = (j + 1) * cellWidth,
+                Y1 = 0,
+                X2 = (j + 1) * cellWidth,
+                Y2 = canvas.ActualHeight
+            };
             canvas.Children.Add(line2);
+
+            TextBlock label = new TextBlock
+            {
+                Text = $"({i + 1}, {j + 1})",
+                Foreground = System.Windows.Media.Brushes.Red,
+                FontSize = 12
+            };
+
+            Canvas.SetLeft(label, (j + 1) * cellWidth + 2);
+            Canvas.SetTop(label, (i + 1) * cellHeight + 2);
+
+            canvas.Children.Add(label);
         }
         public void Draw(Canvas canvas, int i, int j, int n, int m, ListBox listBox, Planet planet)
         {
             Engine eng = new Engine();
-            this.Entity = planet.Tiles[i, j].Entity;
-            if (this.Entity != null && this.Entity.Alive == true)
+            Entity = planet.Tiles[i, j].Entity;
+            if (Entity != null && Entity.Alive)
             {
-                Image tempImg = this.Entity.Draw(canvas.ActualWidth / m, canvas.ActualHeight / n);
+                Image tempImg = Entity.Draw(canvas.ActualWidth / m, canvas.ActualHeight / n);
                 canvas.Children.Add(tempImg);
                 Canvas.SetLeft(tempImg, j * canvas.ActualWidth / m);
                 Canvas.SetTop(tempImg, i * canvas.ActualHeight / n);
-                if (this.Entity.GetType().Name == "Gunslinger")
+                if (Entity is Gunslinger gunslinger && Entity.LastMovedTurn != planet.Turn )
                 {
-                    Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(tempRobot, planet);
-                    string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
+                    eng.SetPathToClosestEntity(gunslinger, planet);
+                    string temp = $"Target:{gunslinger.CurrentTarget.Position.X}, {gunslinger.CurrentTarget.Position.Y} Gunslinger:{gunslinger.Position.X}, {gunslinger.Position.Y}";
                     listBox.Items.Add(temp);
-                    Entity = tempRobot;
-                    this.Entity.Move(planet);
+                    gunslinger.Move(planet);
                 }
-                else if (this.Entity.GetType().Name == "Executioner")
+                else if (Entity is Executioner executioner && Entity.LastMovedTurn != planet.Turn )
                 {
-                    Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(tempRobot, planet);
-                    string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
+                    eng.SetPathToClosestEntity(executioner, planet);
+                    string temp = $"Target:{executioner.CurrentTarget.Position.X}, {executioner.CurrentTarget.Position.Y} Executioner:{executioner.Position.X}, {executioner.Position.Y}";
                     listBox.Items.Add(temp);
-                    Entity = tempRobot;
                     Entity.Move(planet);
                 }
-                else if (this.Entity.GetType().Name == "Healer")
+                else if (Entity is Healer healer && Entity.LastMovedTurn != planet.Turn)
                 {
-                    Robot tempRobot = Entity as Robot;
-                    eng.SetPathToClosestEntity(tempRobot, planet);
-                    string temp = $"{tempRobot.GetType().Name}, {tempRobot.CurrentTarget.Position.X}, {tempRobot.CurrentTarget.Position.Y}, {tempRobot.Position.X}, {tempRobot.Position.Y}";
+                    eng.SetPathToClosestEntity(healer, planet);
+                    string temp = $"Target:{healer.CurrentTarget.Position.X}, {healer.CurrentTarget.Position.Y}  Healer:{healer.Position.X}, {healer.Position.Y}";
                     listBox.Items.Add(temp);
-                    Entity = tempRobot;
                     Entity.Move(planet);
                 }
             }

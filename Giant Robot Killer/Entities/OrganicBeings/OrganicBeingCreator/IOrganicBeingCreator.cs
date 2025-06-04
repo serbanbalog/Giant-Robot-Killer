@@ -1,8 +1,7 @@
-﻿namespace Giant_Robot_Killer
+﻿namespace Giant_Robot_Killer.Entities.OrganicBeings.OrganicBeingCreator
 {
     public interface IOrganicBeingCreator
     {
-        Animal CreateAnimal();
-        Human CreateHuman();
+        Entity CreateOrganicBeing();
     }
 }

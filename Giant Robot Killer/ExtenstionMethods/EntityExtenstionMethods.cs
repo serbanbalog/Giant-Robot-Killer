@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Giant_Robot_Killer.Entities;
+using Giant_Robot_Killer.Entities.OrganicBeings;
+using Image = System.Windows.Controls.Image;
 
 namespace Giant_Robot_Killer.ExtenstionMethods
 {
     public static class EntityExtenstionMethods
     {
-        public static System.Windows.Controls.Image Draw(this Entity entity, double width, double height)
+        public static Image Draw(this Entity entity, double width, double height)
         {
             string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string sFile;
@@ -25,7 +25,7 @@ namespace Giant_Robot_Killer.ExtenstionMethods
             }
             string sFilePath = Path.GetFullPath(sFile);
             BitmapImage bmp = new BitmapImage(new Uri(sFilePath));
-            System.Windows.Controls.Image img = new System.Windows.Controls.Image
+            Image img = new Image
             {
                 Source = bmp,
                 Width = width,
@@ -39,11 +39,10 @@ namespace Giant_Robot_Killer.ExtenstionMethods
             {
                 PointF temp = new PointF();
                 planet.Tiles[(int)entity.Position.X, (int)entity.Position.Y].Entity = null;
-                temp.X = entity.Position.X + entity.Directions.First().x;
-                temp.Y = entity.Position.Y + entity.Directions.First().y;
-                entity.Position = temp;
+                entity.Position = new PointF(entity.Directions.First().X, entity.Directions.First().Y);
                 entity.Directions.Pop();
                 planet.Tiles[(int)entity.Position.X, (int)entity.Position.Y].SetEntity(entity);
+                entity.LastMovedTurn = planet.Turn;
             }
         }
     }

@@ -22,7 +22,7 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
-        <Button Content="Tick" Margin="1075,703,125,40" RenderTransformOrigin="0.5,0.5" Width="100" Click="Button_Click">
+        <Button Content="Tick" Margin="1075,703,125,40" RenderTransformOrigin="0.5,0.5" Width="100" Click="TickButtonClick">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

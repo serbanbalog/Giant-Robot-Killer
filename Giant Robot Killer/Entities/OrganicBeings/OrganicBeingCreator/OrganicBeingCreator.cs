@@ -1,27 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Giant_Robot_Killer.Entity;
 
-namespace Giant_Robot_Killer
+namespace Giant_Robot_Killer.Entities.OrganicBeings.OrganicBeingCreator
 {
     public class OrganicBeingCreator : IOrganicBeingCreator
     {
-        public OrganicBeingCreator() { }
-        public Human CreateHuman()
+        private Random _rnd;
+
+        public OrganicBeingCreator()
         {
-            Random rnd = new Random();
-            int maxHealthPoints = rnd.Next(90, 100);
-            return new Human(maxHealthPoints, FactionType.Friendly);
+         _rnd = new Random();   
         }
-        public Animal CreateAnimal()
+
+        public Entity CreateOrganicBeing()
         {
-            Random rnd = new Random();
-            int maxtHealthPoints = rnd.Next(20, 35);
+            switch (_rnd.Next(2))
+            {
+                case 0:
+                     return CreateHuman();
+                case 1:
+                    return CreateAnimal();
+                default:
+                    return CreateHuman();
+            }
+        }
+        private Human CreateHuman()
+        {
+            int maxHealthPoints = _rnd.Next(90, 100);
+            return new Human(maxHealthPoints, Entity.FactionType.Friendly);
+        }
+        private Animal CreateAnimal()
+        {
+            int maxHealthPoints = _rnd.Next(20, 35);
             AnimalTypes animalType;
-            int temp = rnd.Next(2);
+            int temp = _rnd.Next(2);
             switch (temp)
             {
                 case 0:
@@ -34,7 +45,7 @@ namespace Giant_Robot_Killer
                     animalType = AnimalTypes.Dog;
                     break;
             }
-            return new Animal(maxtHealthPoints, FactionType.Friendly, animalType);
+            return new Animal(maxHealthPoints, Entity.FactionType.Friendly, animalType);
         }
     }
 }

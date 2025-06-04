@@ -1,143 +1,167 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Activation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using Giant_Robot_Killer.Entities;
+using Giant_Robot_Killer.Entities.Robots;
 
 namespace Giant_Robot_Killer
 {
-    struct queueNode
+    struct QueueNode
     {
-        public Cell pt;
-        public int dist;
+        public Cell Pt;
+        public int Dist;
+        
+        public QueueNode(Cell pt, int dist)
+        {
+            Pt = pt;
+            Dist = dist;
+        }
     };
+    
     public struct Cell
     {
-        public int x;
-        public int y;
+        public int X;
+        public int Y;
+        
+        public Cell(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
     };
+    
     public class Engine
     {
-        int[] rowNum = { -1, 0, 0, 1 };
-        int[] colNum = { 0, -1, 1, 0 };
+        int[] _rowNum = { -1, 0, 0, 1 };
+        int[] _colNum = { 0, -1, 1, 0 };
 
-
-        bool checkValid(int row, int col, Planet planet)
+        private bool CheckValid(int row, int col, Planet planet)
         {
-            return ((row >= 0) && (row < planet.n) && (col >= 0) && (col < planet.m));
+            return row >= 0 && row < planet.N &&
+                   col >= 0 && col < planet.M;
         }
+        
         public void CalculateDistanceToClosestEntity(Robot robot, Planet planet)
         {
-            double min = 100;
-            for (int i = 0; i < planet.n; i++)
+            double min = double.MaxValue;
+            Entity closest = null;
+
+            for (int i = 0; i < planet.N; i++)
             {
-                for (int j = 0; j < planet.m; j++)
+                for (int j = 0; j < planet.M; j++)
                 {
-                    if (planet.Tiles[i, j].Entity != null && planet.Tiles[i, j].Entity.Position != robot.Position && (planet.Tiles[i, j].Entity.GetType().Name == "Human" || planet.Tiles[i, j].Entity.GetType().Name == "Animal"))
+                    var target = planet.Tiles[i, j].Entity;
+                    if (target != null &&
+                        (target.GetType().Name == "Human" || target.GetType().Name == "Animal") &&
+                        (target.Position.X != robot.Position.X || target.Position.Y != robot.Position.Y))
                     {
-                        /*if (min < robot.Range && !((i < robot.Position.X - robot.Range) || (i > robot.Position.X + robot.Range) ||
-                            (j < robot.Position.Y - robot.Range) || (j > robot.Position.Y + robot.Range)))
-                            break;
-                        else
-                        {*/
-                        double temp = (planet.Tiles[i, j].Entity.Position.X + planet.Tiles[i, j].Entity.Position.Y) / 2;
-                        if (min > temp)
+                        double distance = Math.Abs(robot.Position.X - i) + Math.Abs(robot.Position.Y - j); // Manhattan
+
+                        if (distance < min)
                         {
-                            min = temp;
-                            robot.CurrentTarget = planet.Tiles[i, j].Entity;
+                            min = distance;
+                            closest = target;
                         }
-                        /*  }*/
                     }
                 }
             }
+            robot.CurrentTarget = closest;
+            Console.WriteLine($"Robot:{robot.Position.X}, {robot.Position.Y} Target:{robot.CurrentTarget.Position.X}, {robot.CurrentTarget.Position.Y}");
         }
-        public void SetPathToClosestEntity( Robot robot, Planet planet)
+        
+        public void SetPathToClosestEntity(Robot robot, Planet planet)
         {
-            if (robot.CurrentTarget == null || robot.CurrentTarget.Alive == false)
-                CalculateDistanceToClosestEntity(robot, planet);
+            if (robot.CurrentTarget == null || !robot.CurrentTarget.Alive)
+                CalculateDistanceToClosestEntity(robot, planet); 
 
             if (robot.CurrentTarget != null)
             {
-                Cell targetPos;
-                targetPos.x = (int)robot.CurrentTarget.Position.X;
-                targetPos.y = (int)robot.CurrentTarget.Position.Y;
-                Cell robotPos;
-                robotPos.x = (int)Math.Abs(robot.Position.X);
-                robotPos.y = (int)Math.Abs(robot.Position.Y);
-                int[,] mat = new int[30, 30];
-                for (int i = 0; i < mat.GetLength(0); i++)
+                Cell targetPos = new Cell((int)robot.CurrentTarget.Position.X, (int)robot.CurrentTarget.Position.Y);
+                Cell robotPos = new Cell((int)robot.Position.X, (int)robot.Position.Y);
+
+                int[,] mat = new int[planet.N, planet.M];
+                for (int i = 0; i < planet.N; i++)
                 {
-                    for (int j = 0; j < mat.GetLength(1); j++)
+                    for (int j = 0; j < planet.M; j++)
                     {
-                        if (planet.Tiles[i, j].Entity == null)
-                            mat[i, j] = 0;
-                        else
-                            mat[i, j] = 1;
+                        mat[i, j] = (planet.Tiles[i, j].Entity == null) ? 0 : 1;
                     }
                 }
-                robot.Directions = bfsLee(mat, robotPos, targetPos, planet);
+
+                robot.Directions = BfsLee(mat, robotPos, targetPos, planet);
             }
         }
-        Stack<Cell> bfsLee(int[,] mat, Cell src, Cell dest, Planet planet)
+        
+        public Stack<Cell> BfsLee(int[,] mat, Cell src, Cell dest, Planet planet)
         {
-            Stack<Cell> toR = new Stack<Cell>();
-            if (src.x == dest.x && src.y ==dest.y)
-                return new Stack<Cell>();
+            int rows = mat.GetLength(0);
+            int cols = mat.GetLength(1);
 
-            bool[,] visited = new bool[mat.GetLength(0), mat.GetLength(1)];
+            bool[,] visited = new bool[rows, cols];
+            Cell[,] parent = new Cell[rows, cols];
 
-            visited[src.x, src.y] = true;
+            Queue<QueueNode> q = new Queue<QueueNode>();
+            visited[src.X, src.Y] = true;
+            q.Enqueue(new QueueNode(src, 0));
 
-            Queue<queueNode> q = new Queue<queueNode>();
+            int[] dRow = { -1, 1, 0, 0 };
+            int[] dCol = { 0, 0, -1, 1 };
 
-            queueNode s;
-            s.pt = src;
-            s.dist = 0;
-            q.Enqueue(s);
-            int minDist = 0;
+            // Check 4 possible adjacent tiles around the destination
+            List<Cell> candidateTargets = new List<Cell>();
 
-            while (q.Count() > 0)
+            for (int i = 0; i < 4; i++)
             {
-                queueNode curr = q.Peek();
-                Cell pt = curr.pt;
-                Cell temp = new Cell();
+                int adjX = dest.X + dRow[i];
+                int adjY = dest.Y + dCol[i];
 
-                if (pt.x == dest.x && pt.y == dest.y)
-                    return toR;
+                if (CheckValid(adjX, adjY, planet) && mat[adjX, adjY] == 0)
+                {
+                    candidateTargets.Add(new Cell(adjX, adjY));
+                }
+            }
 
+            while (q.Count > 0)
+            {
+                QueueNode current = q.Dequeue();
+                Cell pt = current.Pt;
 
-                q.Dequeue();
+                // If current point is one of the adjacent valid target positions
+                if (candidateTargets.Any(c => c.X == pt.X && c.Y == pt.Y))
+                {
+                    // Reconstruct path from src to pt
+                    Stack<Cell> path = new Stack<Cell>();
+                    Cell crawl = pt;
+
+                    while (!(crawl.X == src.X && crawl.Y == src.Y))
+                    {
+                        path.Push(crawl);
+                        crawl = parent[crawl.X, crawl.Y];
+                    }
+
+                    return path;
+                }
 
                 for (int i = 0; i < 4; i++)
                 {
-                    int row = pt.x + rowNum[i];
-                    int col = pt.y + colNum[i];
+                    int newRow = pt.X + dRow[i];
+                    int newCol = pt.Y + dCol[i];
 
-                    if (checkValid(row, col, planet) && !visited[row, col])
+                    if (CheckValid(newRow, newCol, planet) &&
+                        !visited[newRow, newCol] &&
+                        mat[newRow, newCol] == 0)
                     {
-                        visited[row, col] = true;
-                        queueNode Adjcell;
-                        Adjcell.pt.x = row;
-                        Adjcell.pt.y = col;
-                        Adjcell.dist = curr.dist + 1;
-
-                        temp.x = rowNum[i];
-                        temp.y = colNum[i];
-
-                        q.Enqueue(Adjcell);
+                        visited[newRow, newCol] = true;
+                        parent[newRow, newCol] = pt;
+                        q.Enqueue(new QueueNode(new Cell(newRow, newCol), current.Dist + 1));
                     }
                 }
-                if(minDist < q.Peek().dist)
-                {
-                    minDist = q.Peek().dist;
-                    toR.Push(temp);
-                }
             }
-            return new Stack<Cell>();
+
+            return new Stack<Cell>(); // No path found
         }
+        
         public void Tick(Canvas canvas, Planet planet, ListBox listBox)
         {
             listBox.Items.Clear();

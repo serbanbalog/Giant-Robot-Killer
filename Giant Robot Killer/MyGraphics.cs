@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -8,16 +7,16 @@ namespace Giant_Robot_Killer
 {
     public class MyGraphics
     {
-        BitmapImage bmp;
-        public int resX, resY;
+        BitmapImage _bmp;
+        public int ResX, ResY;
 
         public void MainPage(ImageBrush display)
         {
             string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string sFile = Path.Combine(sCurrentDirectory, @"..\..\Resources\MainMenu.png");
             string sFilePath = Path.GetFullPath(sFile);
-            bmp = new BitmapImage(new Uri(sFilePath));
-            display.ImageSource = bmp;
+            _bmp = new BitmapImage(new Uri(sFilePath));
+            display.ImageSource = _bmp;
         }
         public void ChangeMap(ImageBrush display, BitmapImage bmp)
         {

@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Giant_Robot_Killer.Enums;
 
 namespace Giant_Robot_Killer
 {
     public partial class MainWindow : Window
     {
-        MyGraphics g = new MyGraphics();
-        public static List<Planet> planets = new List<Planet>();
-        static bool initializedButtons = false;
-        static bool isOnMainPage = true;
+        MyGraphics _g = new MyGraphics();
+        private static List<Planet> _planets = new List<Planet>();
+        static bool _initializedButtons = false;
+        static bool _isOnMainPage = true;
         public static bool areLinesDrawn = false;
-        static bool planetsAreGenerated = false;
-        static Planet currentPlanet = null;
+        static bool _planetsAreGenerated = false;
+        static Planet _currentPlanet = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,32 +29,32 @@ namespace Giant_Robot_Killer
         }
         private void mainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {  
-            if(isOnMainPage)
+            if(_isOnMainPage)
             {
-                g.MainPage(mainImage);
-                isOnMainPage = false;
+                _g.MainPage(mainImage);
+                _isOnMainPage = false;
             }
 
             double ratio = mainImage.ImageSource.Width / mainImage.ImageSource.Height;
-            if(!initializedButtons)
+            if(!_initializedButtons)
             {
                 InitializeMainMenu();
-                initializedButtons = true;
+                _initializedButtons = true;
             }
             foreach (UIElement ctrl in mainCanvas.Children)
             {
                 if (ctrl is Button)
                 {
-                    newBtnPosition((Button)ctrl, ratio, e);
+                    NewBtnPosition((Button)ctrl, ratio, e);
                 }
-                if(ctrl is Line && currentPlanet != null)
+                if(ctrl is Line && _currentPlanet != null)
                 {
                     Tile.UpdateGrid(mainCanvas, (Line)ctrl);
                 }
             }
 
         }
-        private void newBtnPosition(Control ctrl, double ratio, SizeChangedEventArgs e)
+        private void NewBtnPosition(Control ctrl, double ratio, SizeChangedEventArgs e)
         {
 
             Size oldImgSize, newImgSize;
@@ -104,7 +103,7 @@ namespace Giant_Robot_Killer
         }
         private void InitializeMainMenu()
         {
-            g.MainPage(mainImage);
+            _g.MainPage(mainImage);
             string[] planetNames = new string[]
             {
                 "Mercury",
@@ -118,9 +117,9 @@ namespace Giant_Robot_Killer
             };
             for (int i = 0; i < 8; i++)
             {
-                if(!planetsAreGenerated)
+                if(!_planetsAreGenerated)
                 {
-                    planets.Add(new Planet((Planet.PlanetName)i));          
+                    _planets.Add(new Planet((PlanetName)i));          
                 }
                 Button newBtn = new Button
                 {
@@ -137,30 +136,34 @@ namespace Giant_Robot_Killer
                 Canvas.SetTop(newBtn, mainCanvas.ActualHeight / 2 - 72.5);
                 mainCanvas.Children.Add(newBtn);
             }
-            planetsAreGenerated = true;
+            _planetsAreGenerated = true;
         }
         private void PlanetsButton_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement sourceFrameworkElement = e.Source as FrameworkElement;
-            g.ChangeMap(mainImage, Planet.GoToPlanet(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1]));
-            int planetNr = (int)(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1] - '0');
-            currentPlanet = planets[planetNr];
-            planets[planetNr].Draw( mainCanvas, currentPlanet,  ListBox1);
+            if (sourceFrameworkElement != null)
+            {
+                _g.ChangeMap(mainImage,
+                    Planet.GoToPlanet(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1]));
+                int planetNr = sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1] - '0';
+                _currentPlanet = _planets[planetNr];
+                _planets[planetNr].Draw(mainCanvas, _currentPlanet, ListBox1);
+            }
 
             mainCanvas.Children.RemoveRange(0, 8);
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void TickButtonClick(object sender, RoutedEventArgs e)
         {
-            if(currentPlanet != null)
+            if(_currentPlanet != null)
             {
                 for(int i = 0; i < 8; i++)
                 {
-                    if (currentPlanet.Name == (Planet.PlanetName)i)
-                        planets[i] = currentPlanet;
+                    if (_currentPlanet.Name == (PlanetName)i)
+                        _planets[i] = _currentPlanet;
                 }
                 mainCanvas.Children.Clear();
                 Engine eng = new Engine();
-                eng.Tick(mainCanvas, currentPlanet, ListBox1);
+                eng.Tick(mainCanvas, _currentPlanet, ListBox1);
 
             }
         }

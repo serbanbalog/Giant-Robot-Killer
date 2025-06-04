@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-
-namespace Giant_Robot_Killer
+﻿namespace Giant_Robot_Killer.Entities.Robots
 {
     public abstract class Robot : Entity
     {
@@ -17,10 +9,10 @@ namespace Giant_Robot_Killer
         public int Range { get; private set; }
         public Robot(int maxHealthPoints, int power, int maxMagazineCapacity, int range, FactionType faction) : base(maxHealthPoints, faction)
         {
-            this.Power = power;
-            this.MaxMagazineCapacity = maxMagazineCapacity;
-            this.CurrentMagazineCapacity = maxMagazineCapacity;
-            this.Range = range;
+            Power = power;
+            MaxMagazineCapacity = maxMagazineCapacity;
+            CurrentMagazineCapacity = maxMagazineCapacity;
+            Range = range;
         }
         public abstract void InteractWithTarget(Robot robot);
       
