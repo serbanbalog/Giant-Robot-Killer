@@ -15,6 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,14 +69,16 @@
     <Compile Include="Entities\OrganicBeings\OrganicBeingCreator\OrganicBeingCreator.cs" />
     <Compile Include="Entities\Robots\RobotFactory\IRobotFactory.cs" />
     <Compile Include="Enums\PlanetName.cs" />
-    <Compile Include="ExtenstionMethods\EntityExtenstionMethods.cs" />
-    <Compile Include="ExtenstionMethods\RobotExenstionMethods.cs" />
+    <Compile Include="ExtenstionMethods\Drawing\BitmapExtensionMethods.cs" />
+    <Compile Include="ExtenstionMethods\Entities\EntityExtenstionMethods.cs" />
+    <Compile Include="ExtenstionMethods\Entities\RobotExenstionMethods.cs" />
     <Compile Include="Entities\Robots\ExecutionerRobot\Executioner.cs" />
     <Compile Include="Entities\Robots\GunslingRobot\Gunslinger.cs" />
     <Compile Include="Entities\Robots\HealerRobot\Healer.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\Robots\Robot.cs" />
     <Compile Include="Entities\Robots\RobotFactory\RobotFactory.cs" />
+    <Compile Include="MainPage.cs" />
     <Compile Include="Tile.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +158,19 @@
     <Resource Include="Resources\Cat.jpg" />
     <Resource Include="Resources\Dog.jpg" />
     <Resource Include="Resources\Human.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Planets\Earth.png" />
+    <Content Include="Resources\Planets\Jupiter.png" />
+    <Content Include="Resources\Planets\Saturn.png" />
+    <Content Include="Resources\Planets\Venus.png" />
+    <Content Include="Resources\Planets\Mercury.png" />
+    <Content Include="Resources\Planets\Moon.png" />
+    <Content Include="Resources\Planets\Neptune.png" />
+    <Content Include="Resources\Planets\Sun-light.png" />
+    <Content Include="Resources\Planets\Sun.png" />
+    <Content Include="Resources\Planets\Uranus.png" />
+    <Content Include="Resources\Planets\Mars.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

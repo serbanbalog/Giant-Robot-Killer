@@ -7,7 +7,7 @@ using Giant_Robot_Killer.Entities;
 using Giant_Robot_Killer.Entities.OrganicBeings;
 using Image = System.Windows.Controls.Image;
 
-namespace Giant_Robot_Killer.ExtenstionMethods
+namespace Giant_Robot_Killer.ExtenstionMethods.Entities
 {
     public static class EntityExtenstionMethods
     {

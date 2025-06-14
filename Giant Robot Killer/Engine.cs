@@ -162,10 +162,10 @@ namespace Giant_Robot_Killer
             return new Stack<Cell>(); // No path found
         }
         
-        public void Tick(Canvas canvas, Planet planet, ListBox listBox)
+        public void Tick(Grid grid, Planet planet, ListBox listBox)
         {
             listBox.Items.Clear();
-            planet.Draw(canvas, planet, listBox);
+            planet.Draw(grid, planet, listBox);
         }
     }
 }

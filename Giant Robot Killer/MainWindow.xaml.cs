@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Shapes;
 using Giant_Robot_Killer.Enums;
 
@@ -9,39 +8,39 @@ namespace Giant_Robot_Killer
 {
     public partial class MainWindow : Window
     {
-        MyGraphics _g = new MyGraphics();
-        private static List<Planet> _planets = new List<Planet>();
         static bool _initializedButtons = false;
         static bool _isOnMainPage = true;
         public static bool areLinesDrawn = false;
-        static bool _planetsAreGenerated = false;
         static Planet _currentPlanet = null;
+        private readonly MainPage _mainPage;
+        
         public MainWindow()
         {
             InitializeComponent();
+            _mainPage = new MainPage(ContentGrid);
         }
+        
         private void ReturnToMainMenu(object sender, RoutedEventArgs e)
         {
-            mainCanvas.Children.Clear();
             InitializeMainMenu();
             areLinesDrawn = false;
             ListBox1.Items.Clear();
         }
-        private void mainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {  
-            if(_isOnMainPage)
-            {
-                _g.MainPage(mainImage);
-                _isOnMainPage = false;
-            }
+            // if(_isOnMainPage)
+            // {
+            //     _mainPage.RenderMainPage(ContentGrid);
+            //     _isOnMainPage = false;
+            // }
 
-            double ratio = mainImage.ImageSource.Width / mainImage.ImageSource.Height;
+            double ratio = ContentGrid.ActualWidth / ContentGrid.ActualHeight;
             if(!_initializedButtons)
             {
                 InitializeMainMenu();
                 _initializedButtons = true;
             }
-            foreach (UIElement ctrl in mainCanvas.Children)
+            foreach (UIElement ctrl in ContentGrid.Children)
             {
                 if (ctrl is Button)
                 {
@@ -49,7 +48,7 @@ namespace Giant_Robot_Killer
                 }
                 if(ctrl is Line && _currentPlanet != null)
                 {
-                    Tile.UpdateGrid(mainCanvas, (Line)ctrl);
+                    Tile.UpdateGrid(ContentGrid, (Line)ctrl);
                 }
             }
 
@@ -103,69 +102,59 @@ namespace Giant_Robot_Killer
         }
         private void InitializeMainMenu()
         {
-            _g.MainPage(mainImage);
-            string[] planetNames = new string[]
-            {
-                "Mercury",
-                "Venus",
-                "Earth",
-                "Mars",
-                "Jupiter",
-                "Saturn",
-                "Uranus",
-                "Neptune"
-            };
-            for (int i = 0; i < 8; i++)
-            {
-                if(!_planetsAreGenerated)
-                {
-                    _planets.Add(new Planet((PlanetName)i));          
-                }
-                Button newBtn = new Button
-                {
-                    Name = "Button" + i.ToString(),
-                    Height = 115,
-                    Width = 115,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    ClickMode = ClickMode.Release,
-                    Background = Brushes.Transparent
-                };
-                newBtn.Click += PlanetsButton_Click;
-                Canvas.SetLeft(newBtn, 35 + i * 152.5);
-                Canvas.SetTop(newBtn, mainCanvas.ActualHeight / 2 - 72.5);
-                mainCanvas.Children.Add(newBtn);
-            }
-            _planetsAreGenerated = true;
-        }
-        private void PlanetsButton_Click(object sender, RoutedEventArgs e)
-        {
-            FrameworkElement sourceFrameworkElement = e.Source as FrameworkElement;
-            if (sourceFrameworkElement != null)
-            {
-                _g.ChangeMap(mainImage,
-                    Planet.GoToPlanet(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1]));
-                int planetNr = sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1] - '0';
-                _currentPlanet = _planets[planetNr];
-                _planets[planetNr].Draw(mainCanvas, _currentPlanet, ListBox1);
-            }
+            _mainPage.RenderMainPage();
+            
+            // for (int i = 0; i < 8; i++)
+            // {
+            //     {
+            //         _planets.Add(new Planet((PlanetName)i));          
+            //     }
 
-            mainCanvas.Children.RemoveRange(0, 8);
+                // var boxSize = ContentGrid.ActualHeight * 0.6;
+                // Button newBtn = new Button
+                // {
+                //     Name = "Button" + i,
+                //     Height = 160,
+                //     Width = 160,
+                //     VerticalAlignment = VerticalAlignment.Center,
+                //     HorizontalAlignment = HorizontalAlignment.Left,
+                //     ClickMode = ClickMode.Release,
+                //     Background = Brushes.Transparent,
+                //     Margin = new Thickness(24 + i * (160 + 22), 0, 0, ContentGrid.ActualHeight * 0.274),
+                // };
+                // newBtn.Click += PlanetsButton_Click;
+                //
+                // ContentGrid.Children.Add(newBtn);
+            // }
         }
+        // private void PlanetsButton_Click(object sender, RoutedEventArgs e)
+        // {
+        //     FrameworkElement sourceFrameworkElement = e.Source as FrameworkElement;
+        //     if (sourceFrameworkElement != null)
+        //     {
+        //         // _mainPage.ChangeMap(ContentGrid,
+        //         //     Planet.GoToPlanet(sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1]));
+        //         int planetNr = sourceFrameworkElement.Name[sourceFrameworkElement.Name.Length - 1] - '0';
+        //         _currentPlanet = _planets[planetNr];
+        //         _planets[planetNr].Draw(ContentGrid, _currentPlanet, ListBox1);
+        //     }
+        //
+        //     ContentGrid.Children.RemoveRange(0, 8);
+        // }
         private void TickButtonClick(object sender, RoutedEventArgs e)
         {
-            if(_currentPlanet != null)
-            {
-                for(int i = 0; i < 8; i++)
-                {
-                    if (_currentPlanet.Name == (PlanetName)i)
-                        _planets[i] = _currentPlanet;
-                }
-                mainCanvas.Children.Clear();
-                Engine eng = new Engine();
-                eng.Tick(mainCanvas, _currentPlanet, ListBox1);
-
-            }
+            // if(_currentPlanet != null)
+            // {
+            //     for(int i = 0; i < 8; i++)
+            //     {
+            //         if (_currentPlanet.Name == (PlanetName)i)
+            //             _planets[i] = _currentPlanet;
+            //     }
+            //     ContentGrid.Children.Clear();
+            //     Engine eng = new Engine();
+            //     eng.Tick(ContentGrid, _currentPlanet, ListBox1);
+            //
+            // }
         }
     }
 }

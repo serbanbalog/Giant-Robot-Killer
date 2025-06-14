@@ -1,7 +1,7 @@
 ﻿using System;
 using Giant_Robot_Killer.Entities.Robots;
 
-namespace Giant_Robot_Killer.ExtenstionMethods
+namespace Giant_Robot_Killer.ExtenstionMethods.Entities
 {
     public static class RobotExenstionMethods
     {

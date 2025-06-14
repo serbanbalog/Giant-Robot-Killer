@@ -8,6 +8,7 @@ using Giant_Robot_Killer.Entities.Robots.ExecutionerRobot;
 using Giant_Robot_Killer.Entities.Robots.GunslingRobot;
 using Giant_Robot_Killer.Entities.Robots.HealerRobot;
 using Giant_Robot_Killer.ExtenstionMethods;
+using Giant_Robot_Killer.ExtenstionMethods.Entities;
 
 namespace Giant_Robot_Killer
 {
@@ -30,20 +31,20 @@ namespace Giant_Robot_Killer
             float y = _absLocation.Y + dY / 2;
             Entity.AbsPosition = new PointF(x, y);
         }
-        public static void DrawLines(Canvas canvas, int i, int j, int n, int m)
+        public static void DrawLines(Grid grid, int i, int j, int n, int m)
         {
-            double cellHeight = canvas.ActualHeight / n;
-            double cellWidth = canvas.ActualWidth / m;
+            double cellHeight = grid.ActualHeight / n;
+            double cellWidth = grid.ActualWidth / m;
 
             Line line1 = new Line
             {
                 Stroke = System.Windows.Media.Brushes.Black,
                 X1 = 0,
                 Y1 = (i + 1) * cellHeight,
-                X2 = canvas.ActualWidth,
+                X2 = grid.ActualWidth,
                 Y2 = (i + 1) * cellHeight
             };
-            canvas.Children.Add(line1);
+            grid.Children.Add(line1);
 
             Line line2 = new Line
             {
@@ -51,9 +52,9 @@ namespace Giant_Robot_Killer
                 X1 = (j + 1) * cellWidth,
                 Y1 = 0,
                 X2 = (j + 1) * cellWidth,
-                Y2 = canvas.ActualHeight
+                Y2 = grid.ActualHeight
             };
-            canvas.Children.Add(line2);
+            grid.Children.Add(line2);
 
             TextBlock label = new TextBlock
             {
@@ -65,18 +66,18 @@ namespace Giant_Robot_Killer
             Canvas.SetLeft(label, (j + 1) * cellWidth + 2);
             Canvas.SetTop(label, (i + 1) * cellHeight + 2);
 
-            canvas.Children.Add(label);
+            grid.Children.Add(label);
         }
-        public void Draw(Canvas canvas, int i, int j, int n, int m, ListBox listBox, Planet planet)
+        public void Draw(Grid grid, int i, int j, int n, int m, ListBox listBox, Planet planet)
         {
             Engine eng = new Engine();
             Entity = planet.Tiles[i, j].Entity;
             if (Entity != null && Entity.Alive)
             {
-                Image tempImg = Entity.Draw(canvas.ActualWidth / m, canvas.ActualHeight / n);
-                canvas.Children.Add(tempImg);
-                Canvas.SetLeft(tempImg, j * canvas.ActualWidth / m);
-                Canvas.SetTop(tempImg, i * canvas.ActualHeight / n);
+                Image tempImg = Entity.Draw(grid.ActualWidth / m, grid.ActualHeight / n);
+                grid.Children.Add(tempImg);
+                Canvas.SetLeft(tempImg, j * grid.ActualWidth / m);
+                Canvas.SetTop(tempImg, i * grid.ActualHeight / n);
                 if (Entity is Gunslinger gunslinger && Entity.LastMovedTurn != planet.Turn )
                 {
                     eng.SetPathToClosestEntity(gunslinger, planet);
@@ -100,7 +101,7 @@ namespace Giant_Robot_Killer
                 }
             }
         }
-        public static void UpdateGrid(Canvas canvas, Line line)
+        public static void UpdateGrid(Grid canvas, Line line)
         {
             if (line.X1 == 0)
             {

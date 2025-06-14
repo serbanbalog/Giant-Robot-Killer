@@ -3,37 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Giant_Robot_Killer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1300">
-    <Grid Margin="0,0,0,-6">
-        <Canvas Name="mainCanvas" ClipToBounds="True" Margin="15,15,15,110" SizeChanged="mainCanvas_SizeChanged">
-            <Canvas.Background>
-                <ImageBrush x:Name="mainImage" Stretch="Uniform"  RenderOptions.BitmapScalingMode="HighQuality"/>
-            </Canvas.Background>
-        </Canvas>
-        <Button Content="Button" Margin="807,675,117,10" RenderTransformOrigin="0.5,0.5" Height="25" Width="100" Click="ReturnToMainMenu">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-0.009"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Button.RenderTransform>
-        </Button>
-        <Button Content="Tick" Margin="1075,703,125,40" RenderTransformOrigin="0.5,0.5" Width="100" Click="TickButtonClick">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-0.009"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Button.RenderTransform>
-        </Button>
-        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="91" Margin="15,685,0,0" VerticalAlignment="Top" Width="537"/>
+        Title="MainWindow"
+        WindowStyle="ThreeDBorderWindow"
+        ResizeMode="CanResize"
+        WindowState="Maximized">
+    <Grid x:Name="MainPageGrid" MinHeight="1000" MinWidth="1900" SizeChanged="MainGrid_SizeChanged">
+        <Grid.Background>Black</Grid.Background>
+        <Grid x:Name="ContentGrid" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        </Grid>
 
-
+        <Button Content="Tick" Margin="0, 0,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"
+                Height="25" Click="TickButtonClick" />
+        <Button Content="Button" Margin="0, 0,110,5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"
+                Height="25" Click="ReturnToMainMenu" />
+        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="100" Margin="15,0,0,15"
+                 VerticalAlignment="Bottom" Width="500" />
     </Grid>
 </Window>

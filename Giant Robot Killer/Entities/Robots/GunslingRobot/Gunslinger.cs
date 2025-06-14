@@ -1,4 +1,5 @@
 ﻿using Giant_Robot_Killer.ExtenstionMethods;
+using Giant_Robot_Killer.ExtenstionMethods.Entities;
 
 namespace Giant_Robot_Killer.Entities.Robots.GunslingRobot
 {
