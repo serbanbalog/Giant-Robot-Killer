@@ -1,14 +1,13 @@
-﻿namespace Giant_Robot_Killer.Enums
+﻿namespace Giant_Robot_Killer.Enums;
+
+public enum PlanetName
 {
-    public enum PlanetName
-    {
-        Mercury,
-        Venus,
-        Earth,
-        Mars,
-        Jupiter,
-        Saturn,
-        Uranus,
-        Neptune
-    }
+    Mercury,
+    Venus,
+    Earth,
+    Mars,
+    Jupiter,
+    Saturn,
+    Uranus,
+    Neptune
 }

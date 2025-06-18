@@ -1,9 +1,8 @@
-﻿namespace Giant_Robot_Killer.Entities.OrganicBeings
+﻿namespace Giant_Robot_Killer.Entities.OrganicBeings;
+
+public class Human : Entity
 {
-    public class Human : Entity
+    internal Human(int maxHealthPoints, FactionType faction) : base(maxHealthPoints, faction)
     {
-        internal Human(int maxHealthPoints, FactionType faction) : base(maxHealthPoints, faction)
-        {
-        }
     }
 }

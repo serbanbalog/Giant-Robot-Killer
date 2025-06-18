@@ -1,7 +1,6 @@
-﻿namespace Giant_Robot_Killer.Entities.Robots.RobotFactory
+﻿namespace Giant_Robot_Killer.Entities.Robots.RobotFactory;
+
+public interface IRobotFactory
 {
-    public interface IRobotFactory
-    {
-        Robot GenerateRandomRobot();
-    }
+    Robot GenerateRandomRobot();
 }

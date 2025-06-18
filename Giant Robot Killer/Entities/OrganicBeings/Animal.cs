@@ -1,17 +1,16 @@
-﻿namespace Giant_Robot_Killer.Entities.OrganicBeings
-{
-    public enum AnimalTypes
-    {
-        Dog,
-        Cat
-    }
-    public class Animal : Entity
-    {
+﻿namespace Giant_Robot_Killer.Entities.OrganicBeings;
 
-        public AnimalTypes AnimalType { get; private set; }
-        internal Animal(int maxHealthPoints, FactionType faction, AnimalTypes animalType) : base(maxHealthPoints, faction)
-        {
-            AnimalType = animalType;
-        }      
-    }
+public enum AnimalTypes
+{
+    Dog,
+    Cat
+}
+public class Animal : Entity
+{
+
+    public AnimalTypes AnimalType { get; private set; }
+    internal Animal(int maxHealthPoints, FactionType faction, AnimalTypes animalType) : base(maxHealthPoints, faction)
+    {
+        AnimalType = animalType;
+    }      
 }

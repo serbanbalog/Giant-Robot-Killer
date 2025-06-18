@@ -1,20 +1,18 @@
-﻿using Giant_Robot_Killer.ExtenstionMethods;
-using Giant_Robot_Killer.ExtenstionMethods.Entities;
+﻿using Giant_Robot_Killer.ExtenstionMethods.Entities;
 
-namespace Giant_Robot_Killer.Entities.Robots.HealerRobot
+namespace Giant_Robot_Killer.Entities.Robots.HealerRobot;
+
+public class Healer : Robot
 {
-    public class Healer : Robot
+    internal Healer(int maxHealthPoints, int attackPower, int maxMagazineCapacity, int range, FactionType faction) : base(maxHealthPoints, attackPower, maxMagazineCapacity, range, faction)
     {
-        internal Healer(int maxHealthPoints, int power, int maxMagazineCapacity, int range, FactionType faction) : base(maxHealthPoints, power, maxMagazineCapacity, range, faction)
+    }
+    public override void InteractWithTarget()
+    {
+        if(this.CheckIfInteractionIsPossible())
         {
-        }
-        public override void InteractWithTarget(Robot robot)
-        {
-            if(robot.CheckIfInteractionIsPossible())
-            {
-                robot.CurrentTarget.HealthPoints = CalculateHealing(robot.CurrentTarget, robot.Power);
-                robot.HealthPoints = CalculateHealing(robot, robot.Power);
-            }
+            CurrentTarget.HealthPoints = CalculateHealing(CurrentTarget, AttackPower);
+            HealthPoints = CalculateHealing(this, AttackPower);
         }
     }
 }

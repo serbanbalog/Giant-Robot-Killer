@@ -1,115 +1,150 @@
-﻿using System.Windows.Controls;
+﻿using System;
 using System.Drawing;
-using Image = System.Windows.Controls.Image;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using Giant_Robot_Killer.Entities;
 using Giant_Robot_Killer.Entities.Robots;
-using Giant_Robot_Killer.Entities.Robots.ExecutionerRobot;
-using Giant_Robot_Killer.Entities.Robots.GunslingRobot;
-using Giant_Robot_Killer.Entities.Robots.HealerRobot;
-using Giant_Robot_Killer.ExtenstionMethods;
 using Giant_Robot_Killer.ExtenstionMethods.Entities;
+using Image = System.Windows.Controls.Image;
+using Brushes = System.Windows.Media.Brushes;
+using Point = System.Drawing.Point;
 
-namespace Giant_Robot_Killer
+namespace Giant_Robot_Killer;
+
+public class Tile
 {
-    public class Tile
+    private readonly PointF _mapLocation;
+    private PointF _absLocation;
+    public static int dX = 20, dY = 20;
+    public Entity Entity;
+    private bool _areLinesDrawn = false;
+
+    public Tile(PointF mapLocation)
     {
-        private readonly PointF _mapLocation;
-        private PointF _absLocation;
-        public static int dX = 20, dY = 20;
-        public Entity Entity;
-        public Tile(PointF mapLocation)
+        _mapLocation = mapLocation;
+        _absLocation = new PointF(mapLocation.X * dX, mapLocation.Y * dY);
+    }
+
+    public void SetEntity(Entity entity)
+    {
+        Entity = entity;
+        Entity.Position = _mapLocation;
+        float x = _absLocation.X + dX / 2;
+        float y = _absLocation.Y + dY / 2;
+        Entity.AbsPosition = new PointF(x, y);
+    }
+
+    private void DrawLines(Canvas canvas, Point startPoint, Point endPoint)
+    {
+        double x1 = startPoint.X;
+        double y1 = startPoint.Y;
+        double x2 = endPoint.X;
+        double y2 = startPoint.Y;
+        double x3 = endPoint.X;
+        double y3 = endPoint.Y;
+        double x4 = startPoint.X;
+        double y4 = endPoint.Y;
+
+        Line topLine = CreateLine(x1, y1, x2, y2);
+        Line rightLine = CreateLine(x2, y2, x3, y3);
+        Line bottomLine = CreateLine(x3, y3, x4, y4);
+        Line leftLine = CreateLine(x4, y4, x1, y1);
+
+        canvas.Children.Add(topLine);
+        canvas.Children.Add(rightLine);
+        canvas.Children.Add(bottomLine);
+        canvas.Children.Add(leftLine);
+    }
+
+    private Line CreateLine(double x1, double y1, double x2, double y2)
+    {
+        Line line = new Line
         {
-            _mapLocation = mapLocation;
-            _absLocation = new PointF(mapLocation.X * dX, mapLocation.Y * dY);
-        }
-        public void SetEntity(Entity toSet)
+            X1 = 0,
+            Y1 = 0,
+            X2 = x2 - x1,
+            Y2 = y2 - y1,
+            StrokeThickness = 1,
+            Stroke = Brushes.Black
+        };
+
+        line.Margin = new Thickness(x1, y1, 0, 0);
+
+        return line;
+    }
+
+    public void Draw(Canvas canvas, int i, int j, int n, int m, Planet planet, bool areLinesDrawn)
+    {
+        Entity = planet.Tiles[i, j].Entity;
+
+        double tileWidth = canvas.ActualWidth / m;
+        double tileHeight = canvas.ActualHeight / n;
+
+        Point startPoint = new Point((int)(j * tileWidth), (int)(i * tileHeight));
+        Point endPoint = new Point((int)((j + 1) * tileWidth), (int)((i + 1) * tileHeight));
+
+        if (i == 0 && j == 0)
         {
-            Entity = toSet;
-            Entity.Position = _mapLocation;
-            float x = _absLocation.X + dX / 2;
-            float y = _absLocation.Y + dY / 2;
-            Entity.AbsPosition = new PointF(x, y);
-        }
-        public static void DrawLines(Grid grid, int i, int j, int n, int m)
-        {
-            double cellHeight = grid.ActualHeight / n;
-            double cellWidth = grid.ActualWidth / m;
-
-            Line line1 = new Line
+            var toRemove = canvas.Children.Cast<UIElement>()
+                .Where(x => !(x is Line) && !(x is DockPanel) && !(x is Button) && !(x is TextBlock))
+                .ToList();
+            foreach (var element in toRemove)
             {
-                Stroke = System.Windows.Media.Brushes.Black,
-                X1 = 0,
-                Y1 = (i + 1) * cellHeight,
-                X2 = grid.ActualWidth,
-                Y2 = (i + 1) * cellHeight
-            };
-            grid.Children.Add(line1);
-
-            Line line2 = new Line
-            {
-                Stroke = System.Windows.Media.Brushes.Black,
-                X1 = (j + 1) * cellWidth,
-                Y1 = 0,
-                X2 = (j + 1) * cellWidth,
-                Y2 = grid.ActualHeight
-            };
-            grid.Children.Add(line2);
-
-            TextBlock label = new TextBlock
-            {
-                Text = $"({i + 1}, {j + 1})",
-                Foreground = System.Windows.Media.Brushes.Red,
-                FontSize = 12
-            };
-
-            Canvas.SetLeft(label, (j + 1) * cellWidth + 2);
-            Canvas.SetTop(label, (i + 1) * cellHeight + 2);
-
-            grid.Children.Add(label);
-        }
-        public void Draw(Grid grid, int i, int j, int n, int m, ListBox listBox, Planet planet)
-        {
-            Engine eng = new Engine();
-            Entity = planet.Tiles[i, j].Entity;
-            if (Entity != null && Entity.Alive)
-            {
-                Image tempImg = Entity.Draw(grid.ActualWidth / m, grid.ActualHeight / n);
-                grid.Children.Add(tempImg);
-                Canvas.SetLeft(tempImg, j * grid.ActualWidth / m);
-                Canvas.SetTop(tempImg, i * grid.ActualHeight / n);
-                if (Entity is Gunslinger gunslinger && Entity.LastMovedTurn != planet.Turn )
-                {
-                    eng.SetPathToClosestEntity(gunslinger, planet);
-                    string temp = $"Target:{gunslinger.CurrentTarget.Position.X}, {gunslinger.CurrentTarget.Position.Y} Gunslinger:{gunslinger.Position.X}, {gunslinger.Position.Y}";
-                    listBox.Items.Add(temp);
-                    gunslinger.Move(planet);
-                }
-                else if (Entity is Executioner executioner && Entity.LastMovedTurn != planet.Turn )
-                {
-                    eng.SetPathToClosestEntity(executioner, planet);
-                    string temp = $"Target:{executioner.CurrentTarget.Position.X}, {executioner.CurrentTarget.Position.Y} Executioner:{executioner.Position.X}, {executioner.Position.Y}";
-                    listBox.Items.Add(temp);
-                    Entity.Move(planet);
-                }
-                else if (Entity is Healer healer && Entity.LastMovedTurn != planet.Turn)
-                {
-                    eng.SetPathToClosestEntity(healer, planet);
-                    string temp = $"Target:{healer.CurrentTarget.Position.X}, {healer.CurrentTarget.Position.Y}  Healer:{healer.Position.X}, {healer.Position.Y}";
-                    listBox.Items.Add(temp);
-                    Entity.Move(planet);
-                }
+                canvas.Children.Remove(element);
             }
         }
-        public static void UpdateGrid(Grid canvas, Line line)
+
+        if (!areLinesDrawn)
+            DrawLines(canvas, startPoint, endPoint);
+
+        if (Entity != null && Entity.Alive)
         {
-            if (line.X1 == 0)
+            double cellWidth = canvas.ActualWidth / m;
+            double cellHeight = canvas.ActualHeight / n;
+            double positionX = j * cellWidth;
+            double positionY = i * cellHeight;
+
+            Image entityImage = Entity.Draw(cellWidth, cellHeight, positionX, positionY);
+
+            canvas.Children.Add(entityImage);
+
+            double healthPercentage = Math.Min((double)Entity.HealthPoints / Entity.MaxHealthPoints * 100, 100);
+            double shieldPercentage = Math.Max((double)Entity.HealthPoints / Entity.MaxHealthPoints * 100 - 100, 0);
+
+            ProgressBar healthBar = new ProgressBar
             {
-                line.X2 = canvas.ActualWidth;
-            }
-            else if (line.Y1 == 0)
+                Width = 10,
+                Height = canvas.ActualHeight / n - 5,
+                Orientation = Orientation.Vertical,
+                Value = healthPercentage,
+                Foreground = Brushes.Green,
+                Background = Brushes.Red,
+                BorderThickness = new Thickness(2),
+                BorderBrush = Brushes.Black,
+                Margin = new Thickness((j + 1) * (canvas.ActualWidth / m) - 15, i * (canvas.ActualHeight / n) + 2.5,
+                    0, 0),
+            };
+            canvas.Children.Add(healthBar);
+
+            if (shieldPercentage > 0)
             {
-                line.Y2 = canvas.ActualHeight;
+                ProgressBar shieldBar = new ProgressBar
+                {
+                    Width = 10,
+                    Height = canvas.ActualHeight / n - 5,
+                    Orientation = Orientation.Vertical,
+                    Value = shieldPercentage,
+                    Foreground = Brushes.Blue,
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(2),
+                    BorderBrush = Brushes.Black,
+                    Margin = new Thickness((j + 1) * (canvas.ActualWidth / m) - 15,
+                        i * (canvas.ActualHeight / n) + 2.5, 0, 0),
+                };
+                canvas.Children.Add(shieldBar);
             }
         }
     }

@@ -7,17 +7,11 @@
         Title="MainWindow"
         WindowStyle="ThreeDBorderWindow"
         ResizeMode="CanResize"
-        WindowState="Maximized">
-    <Grid x:Name="MainPageGrid" MinHeight="1000" MinWidth="1900" SizeChanged="MainGrid_SizeChanged">
-        <Grid.Background>Black</Grid.Background>
-        <Grid x:Name="ContentGrid" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        </Grid>
-
-        <Button Content="Tick" Margin="0, 0,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"
-                Height="25" Click="TickButtonClick" />
-        <Button Content="Button" Margin="0, 0,110,5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"
-                Height="25" Click="ReturnToMainMenu" />
-        <ListBox x:Name="ListBox1" HorizontalAlignment="Left" Height="100" Margin="15,0,0,15"
-                 VerticalAlignment="Bottom" Width="500" />
+        WindowState="Maximized"
+        SizeChanged="MainGrid_SizeChanged">
+    <Grid x:Name="MainPageGrid">
+        <Canvas x:Name="ContentGrid" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Canvas.Background>Black</Canvas.Background>
+        </Canvas>
     </Grid>
 </Window>

@@ -62,8 +62,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Engine.cs" />
+    <Compile Include="Entities\CombatEntity.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\OrganicBeings\Animal.cs" />
+    <Compile Include="Entities\OrganicBeings\Defenders\Crusader.cs" />
+    <Compile Include="Entities\OrganicBeings\Defenders\Marksman.cs" />
+    <Compile Include="Entities\OrganicBeings\Defender.cs" />
     <Compile Include="Entities\OrganicBeings\Human.cs" />
     <Compile Include="Entities\OrganicBeings\OrganicBeingCreator\IOrganicBeingCreator.cs" />
     <Compile Include="Entities\OrganicBeings\OrganicBeingCreator\OrganicBeingCreator.cs" />
@@ -73,13 +77,17 @@
     <Compile Include="ExtenstionMethods\Entities\EntityExtenstionMethods.cs" />
     <Compile Include="ExtenstionMethods\Entities\RobotExenstionMethods.cs" />
     <Compile Include="Entities\Robots\ExecutionerRobot\Executioner.cs" />
-    <Compile Include="Entities\Robots\GunslingRobot\Gunslinger.cs" />
+    <Compile Include="Entities\Robots\GunslingerRobot\Gunslinger.cs" />
     <Compile Include="Entities\Robots\HealerRobot\Healer.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\Robots\Robot.cs" />
     <Compile Include="Entities\Robots\RobotFactory\RobotFactory.cs" />
     <Compile Include="MainPage.cs" />
+    <Compile Include="StatsBar.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="VictoryWindow\VictoryWindow.xaml.cs">
+      <DependentUpon>VictoryWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -92,9 +100,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="VictoryWindow\VictoryWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyGraphics.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -124,42 +132,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\MainMenu.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Mercury.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Earth.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Venus.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Saturn.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Jupiter.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Mars.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Neptune.jpg" />
-    <Resource Include="Resources\Uranus.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Gunslinger.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Executioner.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Cat.jpg" />
-    <Resource Include="Resources\Dog.jpg" />
-    <Resource Include="Resources\Human.jpg" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Resources\Organic\Cat.png" />
+    <Content Include="Resources\Organic\Crusader.png" />
+    <Content Include="Resources\Organic\Dog.png" />
+    <Content Include="Resources\Organic\Marksman.png" />
+    <Content Include="Resources\Organic\Human.png" />
     <Content Include="Resources\Planets\Earth.png" />
     <Content Include="Resources\Planets\Jupiter.png" />
     <Content Include="Resources\Planets\Saturn.png" />
@@ -171,6 +148,17 @@
     <Content Include="Resources\Planets\Sun.png" />
     <Content Include="Resources\Planets\Uranus.png" />
     <Content Include="Resources\Planets\Mars.png" />
+    <Content Include="Resources\Planet_Surfaces\Earth_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Jupiter_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Mars_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Mercury_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Neptune_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Saturn_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Uranus_surface.jpg" />
+    <Content Include="Resources\Planet_Surfaces\Venus_surface.jpg" />
+    <Content Include="Resources\Robots\Executioner.png" />
+    <Content Include="Resources\Robots\Gunslinger.png" />
+    <Content Include="Resources\Robots\Healer.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

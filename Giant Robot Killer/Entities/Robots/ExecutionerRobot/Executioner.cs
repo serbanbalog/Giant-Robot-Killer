@@ -1,30 +1,25 @@
 ﻿using Giant_Robot_Killer.ExtenstionMethods;
 using Giant_Robot_Killer.ExtenstionMethods.Entities;
 
-namespace Giant_Robot_Killer.Entities.Robots.ExecutionerRobot
+namespace Giant_Robot_Killer.Entities.Robots.ExecutionerRobot;
+
+public class Executioner : Robot
 {
-    public class Executioner : Robot
-    {
         
-        internal Executioner(int maxHealthPoints, int power, int maxMagazineCapacity, int range, FactionType faction) : base(maxHealthPoints, power, maxMagazineCapacity, range, faction)
+    internal Executioner(int maxHealthPoints, int attackPower, int maxMagazineCapacity, int range, FactionType faction) : base(maxHealthPoints, attackPower, maxMagazineCapacity, range, faction)
+    {
+    }
+    public override void InteractWithTarget()
+    {
+        if (CheckIfTargetInRange() && CurrentTarget.HealthPoints <= 25)
         {
+            int healing = 25 - CurrentTarget.HealthPoints;
+            CurrentTarget.HealthPoints = 0;
+            HealthPoints += CalculateHealing(this, healing);
         }
-        public override void InteractWithTarget(Robot robot)
+        else if(HealthPoints - 1 >= 0)
         {
-            if (robot.CheckIfTargetInRange() && robot.CurrentTarget.HealthPoints <= 25)
-            {
-                int healing = 25 - robot.CurrentTarget.HealthPoints;
-                robot.CurrentTarget.HealthPoints = 0;
-                robot.HealthPoints += CalculateHealing(robot, healing);
-            }
-            else if(robot.HealthPoints - 1 > 0)
-            {
-                robot.HealthPoints--;
-            }
-            else if(robot.HealthPoints - 1 == 0)
-            {
-                robot.HealthPoints--;
-            }
+            HealthPoints--;
         }
     }
 }
