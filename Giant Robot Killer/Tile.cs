@@ -113,6 +113,8 @@ public class Tile
 
             double healthPercentage = Math.Min((double)Entity.HealthPoints / Entity.MaxHealthPoints * 100, 100);
             double shieldPercentage = Math.Max((double)Entity.HealthPoints / Entity.MaxHealthPoints * 100 - 100, 0);
+            
+            var healthbar = Entity.Faction == Entity.FactionType.Friendly ? Brushes.Aqua : Brushes.Red;
 
             ProgressBar healthBar = new ProgressBar
             {
@@ -120,10 +122,10 @@ public class Tile
                 Height = canvas.ActualHeight / n - 5,
                 Orientation = Orientation.Vertical,
                 Value = healthPercentage,
-                Foreground = Brushes.Green,
-                Background = Brushes.Red,
+                Foreground = healthbar,
+                Background = Brushes.Black,
                 BorderThickness = new Thickness(2),
-                BorderBrush = Brushes.Black,
+                BorderBrush = Brushes.White,
                 Margin = new Thickness((j + 1) * (canvas.ActualWidth / m) - 15, i * (canvas.ActualHeight / n) + 2.5,
                     0, 0),
             };

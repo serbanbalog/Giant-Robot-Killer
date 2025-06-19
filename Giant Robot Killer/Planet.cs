@@ -14,7 +14,7 @@ namespace Giant_Robot_Killer;
 
 public class Planet
 {
-    private Random _rnd = new Random();
+    private Random _rnd ;
     private readonly int _robotCapacity, _organicBeingCapacity;
     public PlanetName Name { get; private set; }
     public Tile[,] Tiles { get; set; }
@@ -22,10 +22,10 @@ public class Planet
     public int M => Tiles.GetLength(1);
     public int Turn { get; set; }
 
-    public Planet(PlanetName name)
+    public Planet(PlanetName name, int capacity)
     {
+        _rnd = new Random();
         Name = name;
-        var capacity = _rnd.Next(15, 30);
         _robotCapacity = capacity / (100 / _rnd.Next(35, 50));
         _organicBeingCapacity = capacity - _robotCapacity;
         Turn = 0;

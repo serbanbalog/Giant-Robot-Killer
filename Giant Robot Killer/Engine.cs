@@ -107,8 +107,7 @@ public class Engine
 
     public void SetPathToClosestEntity(CombatEntity combatEntity, Planet planet)
     {
-        if (combatEntity.CurrentTarget == null || !combatEntity.CurrentTarget.Alive)
-            CalculateDistanceToClosestEntity(combatEntity, planet);
+        CalculateDistanceToClosestEntity(combatEntity, planet);
 
         if (combatEntity.CurrentTarget != null)
         {
@@ -199,9 +198,9 @@ public class Engine
     {
         planet.Turn++;
 
-        if(TryShowVictoryWindow(planet))
+        if (TryShowVictoryWindow(planet))
             return true;
-            
+
         for (int i = 0; i < planet.N; i++)
         {
             for (int j = 0; j < planet.M; j++)

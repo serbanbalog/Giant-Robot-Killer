@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -114,9 +115,12 @@ public class MainPage
 
     private void GeneratePlanets(PlanetName[] planetNames)
     {
+        var rnd = new Random();
         foreach (var name in planetNames)
         {
-            _planets.Add(new Planet(name));
+            var planet = new Planet(name,rnd.Next(15,30));
+            Thread.Sleep(5);
+            _planets.Add(planet);
         }
     }
 
